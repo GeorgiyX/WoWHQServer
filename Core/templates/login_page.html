@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{%block content%}
+<form action="" method="post" novalidate class="login_form">
+    {{form.hidden_tag()}}
+    <p>
+        {{ form.user.label(class = "font") }}
+        {{ form.user(size = 32)}}
+        {{ form.password.label(class = "font") }}
+        {{ form.password(size = 32)}}
+        {% for error in form.password.errors%}
+            <span style="color: red;">[{{ error }}]</span>
+        {%endfor%}
+    </p>
+    <p>
+        {{form.submit()}}
+    </p>
+</form>
+{%endblock%}

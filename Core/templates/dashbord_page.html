@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{%block content%}
+<h1 class="font">Hello, type token here:</h1>
+<div style="margin-left:20px;">
+    <div class="font" style="font-size:18px;"><a href="https://does.theapi.work/">Состояние AH файлов</a></div>
+    <div class="font" style="font-size:30px; font-weight: bold; margin-top:10px; margin-bottom:4px">Токен и клиент:</div>
+    <div class="font"><b>Access token:</b> {{client.token.access_token}} <b>Time:</b> {{client.token.time}}</div>
+    <div class="font"><b>client_id:</b> {{client.client.client_id}} <b>client_secret:</b> {{client.client.client_secret}}</div>
+    <form action="" method="post" novalidate style="margin-top:8px;">
+        {{client.client_form.hidden_tag()}}
+        {{client.client_form.form_type()}}
+
+        <p>
+                <div style="display:inline-block">
+                <p>
+                {{ client.client_form.id.label(class = "font") }}
+                </p>
+                {{ client.client_form.id(size = 32)}}
+                </div>
+                <div style="display:inline-block">
+                <p>
+                {{ client.client_form.secret.label(class = "font") }}
+                </p>
+                {{ client.client_form.secret(size = 32)}}
+                </div>
+                {% for error in client.client_form.errors%}
+                <span style="color: red;">{{ error }}</span>
+                {%endfor%}
+            {{client.client_form.submit()}}
+        </p>
+    </form>
+    <div class="font" style="font-size:30px; font-weight: bold; margin-top:10px; margin-bottom:4px">Servers scaner:</div>
+    <div class="font"><b>Состояние: </b>
+        {%if server.reporter.isWork%}
+        <span style="color: green">"Запущен"</span></div>
+        <div class="font"><b>Region: </b>{{server.reporter.region}}<b> Current: </b>{{server.reporter.current}}<b> Total: </b>{{server.reporter.total}}<b> Percent: </b>{{server.reporter.percent}}%</div>
+        {%else%}
+        <span style="color: navy">"Не активен"</span></div>
+        {%endif%}
+    <form action="" method="post" novalidate style="margin-top:8px;">
+        {{server.server_form.hidden_tag()}}
+        {{server.server_form.form_type()}}
+
+        <p>
+            <div style="display:inline-block">
+                <p>
+                    {{server.server_form.countOfThreads.label()}}
+                </p>
+                    {{server.server_form.countOfThreads(size = 5)}}
+            </div>
+                {% for error in server.server_form.errors%}
+                <span style="color: red;">{{ error }}</span>
+                {%endfor%}
+            {{server.server_form.submit()}}
+        </p>
+    </form>
+    <div class="font" style="font-size:30px; font-weight: bold; margin-top:10px; margin-bottom:4px">Item scaner:</div>
+    <div class="font"><b>Состояние: </b>
+        {%if items.reporter.isWork%}
+        <span style="color: green">"Запущен"</span></div>
+        <div class="font"><b>Current: </b>{{items.reporter.current}}<b> Total: </b>{{items.reporter.total}}<b> Percent: </b>{{items.reporter.percent}}%</div>
+        {%else%}
+        <span style="color: navy">"Не активен"</span></div>
+        {%endif%}
+    <form action="" method="post" novalidate style="margin-top:8px;">
+        {{items.item_form.hidden_tag()}}
+        {{items.item_form.form_type()}}
+        <p>
+            <div style="display:inline-block">
+                <p>
+                    {{items.item_form.countOfThreads.label()}}
+                </p>
+                    {{items.item_form.countOfThreads(size = 5)}}
+            </div>
+            <div style="display:inline-block">
+                <p>
+                    {{items.item_form.minItemId.label()}}
+                </p>
+                    {{items.item_form.minItemId(size = 5)}}
+            </div>
+            <div style="display:inline-block">
+                <p>
+                    {{items.item_form.maxItemId.label()}}
+                </p>
+                    {{items.item_form.maxItemId(size = 9)}}
+            </div>
+            <div style="display:inline-block">
+                <p>
+                    {{items.item_form.startFromLast.label()}}
+                </p>
+                    {{items.item_form.startFromLast()}}
+            </div>
+                {% for error in items.item_form.errors%}
+                <span style="color: red;">{{ error }}</span>
+                {%endfor%}
+            {{items.item_form.submit()}}
+        </p>
+    </form>
+    <div class="font" style="font-size:30px; font-weight: bold; margin-top:10px; margin-bottom:4px">Pet scaner:</div>
+    <div class="font"><b>Состояние: </b>
+        {%if pet.reporter.isWork%}
+        <span style="color: green">"Запущен"</span></div>
+        <div class="font"><b>Current: </b>{{pet.reporter.current}}<b> Total: </b>{{pet.reporter.total}}<b> Percent: </b>{{pet.reporter.percent}}%</div>
+        {%else%}
+        <span style="color: navy">"Не активен"</span></div>
+        {%endif%}
+    <form action="" method="post" novalidate style="margin-top:8px;">
+        {{pet.pet_form.hidden_tag()}}
+        {{pet.pet_form.form_type()}}
+
+        <p>
+            <div style="display:inline-block">
+                <p>
+                    {{pet.pet_form.countOfThreads.label()}}
+                </p>
+                    {{pet.pet_form.countOfThreads(size = 5)}}
+            </div>
+                {% for error in pet.pet_form.errors%}
+                <span style="color: red;">{{ error }}</span>
+                {%endfor%}
+            {{pet.pet_form.submit()}}
+        </p>
+    </form>
+</div>
+
+{%endblock%}
