@@ -78,6 +78,6 @@ from Core.models import Auctions, Servers
 #
 # old_lots = Auctions.query.filter( Auctions.id.in_(lot_id_for_del)).all()
 # print(len(old_lots))
-a= Auctions.query.all()
-a.close()
+from Core import app
+print(app.config.get('DEBUG'))
 

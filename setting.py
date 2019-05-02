@@ -6,3 +6,7 @@ class Config():
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or "postgresql://user:1234@127.0.0.1:5432/wow_db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PAZZ = "88051-9019"
+    DEBUG = True
+
+class ProductionConfig(Config):
+    DEBUG = False

@@ -5,3 +5,4 @@ venv/
 migrations/
 help.txt
 *.txt
+test.py

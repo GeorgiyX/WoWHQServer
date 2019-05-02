@@ -1,5 +1,5 @@
 from flask import Flask
-from setting import Config
+from setting import Config, ProductionConfig
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
