@@ -130,7 +130,7 @@ class Servers(db.Model):
         return "Name: {}, Slug: {}, Region: {}".format(self.name_ru, self.slug, self.region)
 
 servers_auctions = db.Table('servers_auctions',
-                            db.Column('lot_id', db.Integer, db.ForeignKey('auctions.id')),
+                            db.Column('lot_id', db.Integer, db.ForeignKey('auctions.id', ondelete='CASCADE')),
                             db.Column('serv_id', db.Integer, db.ForeignKey('servers.id')))
 
 
@@ -507,5 +507,126 @@ class AssistInfo(db.Model):
     def __repr__(self):
         return "Key: {}; Value: {}".format(self.key, self.value)
 
+class GameClass(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    spec = db.relationship('GameSpec', backref = 'g_class', lazy='dynamic') #dynamic
+
+    name_ru = db.Column(db.String(128), index = True, unique = False)
+    name_en = db.Column(db.String(128), index = True, unique = False)
+    name_de = db.Column(db.String(128), index = True, unique = False)
+    name_fr = db.Column(db.String(128), index = True, unique = False)
+    name_es = db.Column(db.String(128), index = True, unique = False)
+
+    power_type = db.Column(db.String(128), index = True, unique = False)
+
+    def __init__(self,
+                 name_ru,
+                 name_en,
+                 name_de,
+                 name_fr,
+                 name_es,
+                 power_type):
+        self.name_ru = name_ru
+        self.name_en = name_en
+        self.name_de = name_de
+        self.name_fr = name_fr
+        self.name_es = name_es
+
+        self.power_type = power_type
+
+    def __repr__(self):
+
+        return 'Name: {}; Id: {}'.format(self.name_ru, self.id)
+
+class GameSpec(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    class_id = db.Column(db.Integer, db.ForeignKey('game_class.id'), nullable = False)
+    spec = db.relationship('Talants', backref = 'g_spec', lazy='dynamic') #dynamic
 
 
+    name_ru = db.Column(db.String(128), index=True, unique=False)
+    name_en = db.Column(db.String(128), index=True, unique=False)
+    name_de = db.Column(db.String(128), index=True, unique=False)
+    name_fr = db.Column(db.String(128), index=True, unique=False)
+    name_es = db.Column(db.String(128), index=True, unique=False)
+
+    description_ru = db.Column(db.String(550), index=True, unique=False)
+    description_en = db.Column(db.String(550), index=True, unique=False)
+    description_de = db.Column(db.String(550), index=True, unique=False)
+    description_fr = db.Column(db.String(550), index=True, unique=False)
+    description_es = db.Column(db.String(550), index=True, unique=False)
+
+    role = db.Column(db.String(64), index=True, unique=False)
+    icon = db.Column(db.String(64), index=True, unique=False)
+    backgroundImage = db.Column(db.String(64), index=True, unique=False)
+    order = db.Column(db.Integer, index=True)
+
+    def __init__(self,
+                 g_class,
+                 name_ru,
+                 name_en,
+                 name_de,
+                 name_fr,
+                 name_es,
+
+                 description_ru,
+                 description_en,
+                 description_de,
+                 description_fr,
+                 description_es,
+                 role,
+                 icon,
+                 backgroundImage,
+                 order
+                 ):
+
+        self.g_class = g_class
+
+        self.name_ru = name_ru
+        self.name_en = name_en
+        self.name_de = name_de
+        self.name_fr = name_fr
+        self.name_es = name_es
+
+        self.description_ru = description_ru
+        self.description_en = description_en
+        self.description_de = description_de
+        self.description_fr = description_fr
+        self.description_es = description_es
+
+        self.role = role
+        self.icon = icon
+        self.backgroundImage = backgroundImage
+        self.order = int(order)
+
+    def __repr__(self):
+        return "Spec: {}; Class: {}".format(self.name_ru, self.g_class.name_ru) #Протестить
+
+
+class Talants(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    spec_id = db.Column(db.Integer, db.ForeignKey('game_spec.id'), nullable = False)
+
+    tier = db.Column(db.Integer, index=True)
+    column = db.Column(db.Integer, index=True)
+    spell_id = db.Column(db.Integer, index=True)
+    castTime = db.Column(db.String(64), index=True, unique=False)
+    range = db.Column(db.String(64), index=True, unique=False)
+    powerCost = db.Column(db.String(64), index=True, unique=False)
+    cooldown = db.Column(db.String(64), index=True, unique=False)
+
+    name_ru = db.Column(db.String(128), index=True, unique=False)
+    name_en = db.Column(db.String(128), index=True, unique=False)
+    name_de = db.Column(db.String(128), index=True, unique=False)
+    name_fr = db.Column(db.String(128), index=True, unique=False)
+    name_es = db.Column(db.String(128), index=True, unique=False)
+
+    description_ru = db.Column(db.String(1200), index=True, unique=False)
+    description_en = db.Column(db.String(1200), index=True, unique=False)
+    description_de = db.Column(db.String(1200), index=True, unique=False)
+    description_fr = db.Column(db.String(1200), index=True, unique=False)
+    description_es = db.Column(db.String(1200), index=True, unique=False)
+
+    #конструктора нет так как он должен генерится автоматом #Протестить
+    def __repr__(self):
+        return "Name: {}; Spec: {}; Class: {};".format(self.name_ru, self.g_spec.name_ru, self.g_spec.g_class.name_ru) #протестить

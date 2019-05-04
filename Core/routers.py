@@ -1,5 +1,5 @@
 from Core import app
-from flask import render_template, flash, redirect, request
+from flask import render_template, flash, redirect, request, jsonify
 from Core.forms import PasswordForm, ClientForm, ServerForm, ItemForm, PetForm
 from Core.models import User
 from flask_login import current_user, login_user, logout_user, login_required
@@ -9,6 +9,8 @@ from Core.Utilites.Utilites import Reporter, ThreadStopper
 from Core.Scaners.ServerScaner import ServerScaner
 from Core.Scaners.ItemsScaner import ItemScaner
 from Core.Scaners.PetsScaner import PetScaner
+from Core.Scaners.Other import *
+import json
 
 stopper = ThreadStopper()
 reporter = Reporter()
@@ -121,7 +123,16 @@ def dashbord():
                             pet = {"pet_form":pet_form, "reporter":reporter.petscan})
 
 
-
-@app.route("/api")
+@app.route("/api/", methods = ["GET"])
 def root():
-    return "Привет"
+    return json.dumps({"name":"hi!!! its wowhqAPI"}, ensure_ascii=False)
+
+@app.route("/api/cls_spec/<string:lang>",  methods = ["GET"])
+def cls_spec(lang):
+    # return jsonify(getClassSpecDict(lang))
+    return json.dumps(getClassSpecDict(lang), ensure_ascii=False,indent=4)
+
+@app.route("/api/talents/<int:cls>/<int:spec>/<string:lang>",  methods = ["GET"])
+def talents(cls,spec, lang):
+    # return jsonify(getClassSpecDict(lang))
+    return json.dumps(getTalent(cls=cls, spec=spec, lang=lang), ensure_ascii=False,indent=4)
