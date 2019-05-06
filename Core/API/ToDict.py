@@ -21,9 +21,10 @@ class GetDict:
         if lang in GetDict.langs:
             clss = GameClass.query.all()
             for cls in clss:
-                data.append([{"class_id": cls.id, "spec_id": spec.id,"name": getattr(spec, "name_{}".format(lang)),
+                for spec in cls.spec:
+                    data.append({"class_id": cls.id, "spec_id": spec.id,"name": getattr(spec, "name_{}".format(lang)),
                                                                          "description":getattr(spec, "description_{}".format(lang)),
-                                                                         "icon": spec.icon} for spec in cls.spec])
+                                                                         "icon": spec.icon})
             return  data
         else:
             return {"error" : "no lang"}
