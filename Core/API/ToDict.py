@@ -48,7 +48,7 @@ class GetDict:
         data = {}
         talants = Talants.query.join(GameSpec, GameSpec.id == Talants.spec_id).join(GameClass, GameClass.id == GameSpec.class_id).filter(GameClass.id == int(cls),GameSpec.order == int(spec)).order_by(Talants.id.asc()).all()
         if lang in GetDict.langs:
-            data["talents"] = [{"name": getattr(t,"name_{}".format(lang)), "description": getattr(t, "description_{}".format(lang)),
+            data["talents"] = [{"id" : t.id,"name": getattr(t,"name_{}".format(lang)), "description": getattr(t, "description_{}".format(lang)),
                                 "castTime":t.castTime, "range": t.range, "powerCost": t.powerCost, "cooldown":t.cooldown,
                                 "row":t.tier, "col":t.column} for t in talants]
             return data
