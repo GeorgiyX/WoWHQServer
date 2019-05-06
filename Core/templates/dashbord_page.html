@@ -121,6 +121,62 @@
             {{pet.pet_form.submit()}}
         </p>
     </form>
+    <div class="font" style="font-size:30px; font-weight: bold; margin-top:10px; margin-bottom:4px">Сканер аукционов:</div>
+    <div class="font"><b>Состояние: </b>
+        {%if auc.reporter.isWork%}
+        <span style="color: green">"Запущен"</span></div>
+        <div class="font"><p><b><i>Текущий цикл:</i></b></p>
+            <b>Номер цикла: </b>{{auc.reporter.number_of_cycles}}
+            <b> Текущий auc_link: </b>{{auc.reporter.current}}
+            <b> Всего auc_link: </b>{{auc.reporter.total}}
+            <b> Выполнено: </b>{{auc.reporter.percent}}%
+        </div>
+        <div class="font"><p><b><i>Общая информация:</i></b></p>
+            <b>Среднее время скана одного сервера: </b>{{auc.reporter.avg_auc_time}}
+            <b> Среднее количество лотов: </b>{{auc.reporter.avg_auc}}
+            <b> Средее время одного цикла: </b>{{auc.reporter.avg_cycle_time}}
+            <b> Время начала работы: </b>{{auc.reporter.star_time}}
+        </div>
+        {%else%}
+        <span style="color: navy">"Не активен"</span></div>
+        {%endif%}
+    <form action="" method="post" novalidate style="margin-top:8px;">
+        {{auc.auc_form.hidden_tag()}}
+        {{auc.auc_form.form_type()}}
+
+        <p>
+            <div style="display:inline-block">
+                <p>
+                    {{auc.auc_form.countOfThreads.label()}}
+                </p>
+                    {{auc.auc_form.countOfThreads(size = 5)}}
+            </div>
+            <div style="display:inline-block">
+                <p>
+                    {{auc.auc_form.cycle_time.label()}}
+                </p>
+                    {{auc.auc_form.cycle_time(size = 5)}}
+            </div>
+            <p>
+                <div style="display:inline-block">
+                    <p>
+                        {{auc.auc_form.is_limit.label()}}
+                    </p>
+                        {{auc.auc_form.is_limit()}}
+                </div>
+                <div style="display:inline-block">
+                    <p>
+                        {{auc.auc_form.lot_limit.label()}}
+                    </p>
+                        {{auc.auc_form.lot_limit()}}
+                </div>
+            </p>
+                {% for error in auc.auc_form.errors%}
+                <span style="color: red;">{{ error }}</span>
+                {%endfor%}
+            {{auc.auc_form.submit()}}
+        </p>
+    </form>
 </div>
 
 {%endblock%}

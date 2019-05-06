@@ -541,7 +541,7 @@ class GameClass(db.Model):
 class GameSpec(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     class_id = db.Column(db.Integer, db.ForeignKey('game_class.id'), nullable = False)
-    spec = db.relationship('Talants', backref = 'g_spec', lazy='dynamic') #dynamic
+    spec = db.relationship('Talants', backref = 'g_spec', lazy='dynamic') #Поле нужно переименновать в talant
 
 
     name_ru = db.Column(db.String(128), index=True, unique=False)

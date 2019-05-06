@@ -32,7 +32,7 @@ class ClientForm(FlaskForm):
 class ItemForm(FlaskForm):
     maxItemId = IntegerField("maxItemId:",default=300000, widget=NumberInput(), validators=[DataRequired()])
     minItemId = IntegerField("minItemId:",default=1,widget=NumberInput(),validators=[DataRequired()])
-    countOfThreads = IntegerField("countOfThreads:",default=16,widget=NumberInput(), validators=[DataRequired()])
+    countOfThreads = IntegerField("countOfThreads:",default=8,widget=NumberInput(), validators=[DataRequired()])
     startFromLast = BooleanField("startFromLast", default=True)
     form_type = HiddenField(default="item_form")
     submit = SubmitField("Начать скан")
@@ -41,15 +41,26 @@ class ItemForm(FlaskForm):
 
 class ServerForm(FlaskForm):
 
-    countOfThreads = IntegerField("countOfThreads:", default=12,widget=NumberInput(), validators=[DataRequired()])
+    countOfThreads = IntegerField("countOfThreads:", default=8,widget=NumberInput(), validators=[DataRequired()])
     form_type = HiddenField(default="server_form")
     submit = SubmitField("Начать скан")
 
 
 class PetForm(FlaskForm):
-    countOfThreads = IntegerField("countOfThreads:", default=12,widget=NumberInput(), validators=[DataRequired()])
+    countOfThreads = IntegerField("countOfThreads:", default=8,widget=NumberInput(), validators=[DataRequired()])
     form_type = HiddenField(default="pet_form")
     submit = SubmitField("Начать скан")
+
+class AucForm(FlaskForm):
+    form_type = HiddenField(default="auc_form")
+    countOfThreads = IntegerField("Потоков:", default=3,widget=NumberInput(), validators=[DataRequired()])
+    is_limit = BooleanField("Ограничить число лотов", default=True)
+    lot_limit = IntegerField("Число сохраняемых лотов:", default=150,widget=NumberInput(), validators=[DataRequired()])
+    cycle_time = IntegerField("Min время на 1 цикл (мин.):", default=40,widget=NumberInput(), validators=[DataRequired()])
+    submit = SubmitField("Начать скан")
+
+
+
 
 
 

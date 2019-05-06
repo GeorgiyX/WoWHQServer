@@ -169,30 +169,3 @@ def SaveTalants():
                                 if int(spec.order) == int(data[langs[0]][str(cls.id)]["talents"][i][n][m]["spec"]["order"]):
                                     break
                             addTalant()
-
-
-def getClassSpecDict(lang):
-    langs = ["ru", "en", "de", "fr", "es"]
-    data = {}
-    if lang in langs:
-        clss = GameClass.query.all()
-        for cls in clss:
-            data[getattr(cls, "name_{}".format(lang))] = {"id": cls.id,
-                                                          "specs":[ {"name": getattr(spec, "name_{}".format(lang)),
-                                                                     "description":getattr(spec, "description_{}".format(lang)),
-                                                                     "icon": spec.icon, "id": spec.order} for spec in cls.spec]}
-        return  data
-    else:
-        return {"error" : "no lang"}
-
-def getTalent(cls, spec, lang):
-    langs = ["ru", "en", "de", "fr", "es"]
-    data = {}
-    talants = Talants.query.join(GameSpec, GameSpec.id == Talants.spec_id).join(GameClass, GameClass.id == GameSpec.class_id).filter(GameClass.id == int(cls),GameSpec.order == int(spec)).order_by(Talants.id.asc()).all()
-    if lang in langs:
-        data["talents"] = [{"name": getattr(t,"name_{}".format(lang)), "description": getattr(t, "description_{}".format(lang)),
-                            "castTime":t.castTime, "range": t.range, "powerCost": t.powerCost, "cooldown":t.cooldown,
-                            "position": {"row":t.tier, "col":t.column}} for t in talants]
-        return data
-    else:
-        return {"error": "no lang"}

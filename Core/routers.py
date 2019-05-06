@@ -1,6 +1,8 @@
 from Core import app
 from flask import render_template, flash, redirect, request, jsonify
-from Core.forms import PasswordForm, ClientForm, ServerForm, ItemForm, PetForm
+
+from Core.Scaners.AuctionScaner import AuctionsScaner
+from Core.forms import PasswordForm, ClientForm, ServerForm, ItemForm, PetForm, AucForm
 from Core.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -9,7 +11,7 @@ from Core.Utilites.Utilites import Reporter, ThreadStopper
 from Core.Scaners.ServerScaner import ServerScaner
 from Core.Scaners.ItemsScaner import ItemScaner
 from Core.Scaners.PetsScaner import PetScaner
-from Core.Scaners.Other import *
+from Core.API.ToDict import GetDict
 import json
 
 stopper = ThreadStopper()
@@ -51,6 +53,7 @@ def dashbord():
     server_form = ServerForm()
     item_form = ItemForm()
     pet_form = PetForm()
+    auc_form = AucForm()
 
     if stopper.is_server_thread_must_stop is False:
         server_form.submit.label.text = "Выключить"
@@ -58,6 +61,8 @@ def dashbord():
         item_form.submit.label.text = "Выключить"
     if stopper.is_pet_thread_must_stop is False:
         pet_form.submit.label.text = "Выключить"
+    if stopper.is_auc_thread_must_stop is False:
+        auc_form.submit.label.text = "Выключить"
 
     if request.method == "POST":
         print("In post!")
@@ -115,12 +120,32 @@ def dashbord():
                     flash("Скан петов остановлен!")
                     return redirect("/dashbord")
 
+        elif request.form["form_type"] == "auc_form":
+            if auc_form.validate_on_submit():
+                if reporter.aucscan["isWork"] == False:
+                    stopper.is_auc_thread_must_stop = False
+
+                    if auc_form.is_limit.data is True:
+                        lot_limit = int(auc_form.lot_limit.data)
+                    else:
+                        lot_limit = None
+
+                    auc_thread = AuctionsScaner(reporter=reporter,stopper=stopper,countOfThreads=auc_form.countOfThreads.data, lot_limit=lot_limit, cycle_time=auc_form.cycle_time.data)
+                    auc_thread.start()
+                    flash("Запущен скан аукционов!")
+                    return redirect("/dashbord")
+                else:
+                    stopper.is_auc_thread_must_stop = True
+                    flash("Запущен процесс остановки скана аукционов!")
+                    return redirect("/dashbord")
+
 
 
     return render_template("dashbord_page.html", title = "Dashbord", client = {"client_form":client_form, "token" : getToken(), "client":getClientValues()},
                             server = {"server_form":server_form, "reporter": reporter.serverscan},
                             items = {"item_form":item_form, "reporter": reporter.itemscan},
-                            pet = {"pet_form":pet_form, "reporter":reporter.petscan})
+                            pet = {"pet_form":pet_form, "reporter":reporter.petscan},
+                            auc = {"auc_form": auc_form, "reporter": reporter.aucscan})
 
 
 @app.route("/api/", methods = ["GET"])
@@ -130,9 +155,29 @@ def root():
 @app.route("/api/cls_spec/<string:lang>",  methods = ["GET"])
 def cls_spec(lang):
     # return jsonify(getClassSpecDict(lang))
-    return json.dumps(getClassSpecDict(lang), ensure_ascii=False,indent=4)
+    return json.dumps(GetDict.getClassSpecDict(lang), ensure_ascii=False,indent=4)
 
 @app.route("/api/talents/<int:cls>/<int:spec>/<string:lang>",  methods = ["GET"])
 def talents(cls,spec, lang):
     # return jsonify(getClassSpecDict(lang))
-    return json.dumps(getTalent(cls=cls, spec=spec, lang=lang), ensure_ascii=False,indent=4)
+    return json.dumps(GetDict.getTalent(cls=cls, spec=spec, lang=lang), ensure_ascii=False,indent=4)
+
+@app.route("/api/allauc/<string:slug>/<string:region>/<string:lang>/<int:page>",  methods = ["GET"])
+def allAuctions(slug, region, lang, page):
+    return json.dumps(GetDict.getAuctionsAll(slug=slug, region = region, lang=lang, page=page), ensure_ascii=False,indent=4)
+
+@app.route("/api/<string:type>/<string:name>/<string:lang>",  methods = ["GET"])
+def oneItemOrPet(type, name, lang):
+    return json.dumps(GetDict.getOneItemOrPetOrNone(type=type, name=name, lang=lang), ensure_ascii=False,indent=4)
+
+@app.route("/api/bestaucs/<string:lang>",  methods = ["POST"])
+def dealsAuctions(lang):
+    return json.dumps(GetDict.getDeals(lang=lang, json= request.json), ensure_ascii=False,indent=4)
+
+@app.route("/api/classes/<string:lang>",  methods = ["GET"])
+def getClasses(lang):
+    return json.dumps(GetDict.getClasses(lang=lang), ensure_ascii=False,indent=4)
+
+@app.route("/api/specs/<string:lang>",  methods = ["GET"])
+def getSpecs(lang):
+    return json.dumps(GetDict.getSpecs(lang=lang), ensure_ascii=False,indent=4)
