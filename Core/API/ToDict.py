@@ -1,3 +1,5 @@
+from copy import copy
+
 from Core.models import GameClass, Talants, GameSpec, Auctions, Servers, Items, Pets
 
 
@@ -22,7 +24,7 @@ class GetDict:
             clss = GameClass.query.all()
             for cls in clss:
                 for spec in cls.spec:
-                    data.append({"class_id": cls.id, "spec_id": spec.id,"name": getattr(spec, "name_{}".format(lang)),
+                    data.append({"class_id": cls.id, "id": spec.id, "spec_order": spec.order,"name": getattr(spec, "name_{}".format(lang)),
                                                                          "description":getattr(spec, "description_{}".format(lang)),
                                                                          "icon": spec.icon})
             return  data
@@ -48,7 +50,7 @@ class GetDict:
         data = {}
         talants = Talants.query.join(GameSpec, GameSpec.id == Talants.spec_id).join(GameClass, GameClass.id == GameSpec.class_id).filter(GameClass.id == int(cls),GameSpec.order == int(spec)).order_by(Talants.id.asc()).all()
         if lang in GetDict.langs:
-            data["talents"] = [{"id" : t.id,"name": getattr(t,"name_{}".format(lang)), "description": getattr(t, "description_{}".format(lang)),
+            data["talents"] = [{"id" : t.id, "spec_id" : t.spec_id,"name": getattr(t,"name_{}".format(lang)), "description": getattr(t, "description_{}".format(lang)),
                                 "castTime":t.castTime, "range": t.range, "powerCost": t.powerCost, "cooldown":t.cooldown,
                                 "row":t.tier, "col":t.column} for t in talants]
             return data
@@ -108,14 +110,16 @@ class GetDict:
             for item in json["best_lot"]:
                 time_list = ["VERY_LONG", "LONG","MEDIUM", "SHORT"]
 
-                if item["time_left"] == "ANY" or "VERY_LONG": #?
-                    time_left = time_list[0::None]
+                if item["time_left"] == "ANY" or item["time_left"] =="VERY_LONG": #?
+                    time_left = copy(time_list)[0:None]
                 elif item["time_left"] == "LONG":
-                    time_left = time_list[1:None]
+                    time_left = copy(time_list)[1:None]
                 elif item["time_left"] == "MEDIUM":
-                    time_left = time_list[2::None]
+                    time_left = copy(time_list)[2:None]
                 elif item["time_left"] == "SHORT":
-                    time_left = time_list[3::None]
+                    print("==")
+                    time_left = copy(time_list)[3:None]
+
                 print(time_left)
                 if "pet_id" in item:
                     pet_id = item["pet_id"]
