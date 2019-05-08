@@ -26,7 +26,7 @@ class AuctionsScaner(Thread):
         while self.stopper.is_auc_thread_must_stop is False:
             time_start = datetime.datetime.now()
             cycle_time = datetime.timedelta(minutes=self.cycle_time)
-            unique_server = Servers.query.with_entities(Servers.auc, Servers.timestamp).distinct().order_by(asc(Servers.timestamp)).all()[0:10]
+            unique_server = Servers.query.with_entities(Servers.auc, Servers.timestamp).distinct().order_by(asc(Servers.timestamp)).all()#[0:10]
             stop = self.counOfThread
             start = 0
             realms_count = len(list(unique_server))
