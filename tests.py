@@ -9,4 +9,9 @@ from Core.API.ToDict import *
 #     print(str(auc.item.name_ru) + " " + str(auc.auc) + " " )
 # print(len(aucs))
 
-print(Items.query.filter(getattr(Items, "name_{}".format("ru")) == "Фаронаарская шипучка").first())
+# print(Items.query.filter(getattr(Items, "name_{}".format("ru")) == "Фаронаарская шипучка").first())
+
+slugs = Servers.query.with_entities(Servers.slug).distinct(Servers.slug).all()
+with open("slugs", "a", encoding="utf-8") as f:
+    for slug in slugs:
+        f.write("<item>"+(str(slug.slug))+"</item>" + "\n")
