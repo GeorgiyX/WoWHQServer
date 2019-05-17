@@ -150,7 +150,6 @@ class AucThread(Thread):
                 break
 
 
-
 if __name__ == '__main__':
     print("Запущен скан ауков самостоятельно")
     s = ThreadStopper()

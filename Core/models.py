@@ -630,3 +630,25 @@ class Talants(db.Model):
     #конструктора нет так как он должен генерится автоматом #Протестить
     def __repr__(self):
         return "Name: {}; Spec: {}; Class: {};".format(self.name_ru, self.g_spec.name_ru, self.g_spec.g_class.name_ru) #протестить
+
+
+class WowToken(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    region = db.Column(db.String(16), index=True, unique=False)
+
+    current_price_blizzard_api = db.Column(db.Integer, index=True)
+    current_price_wowtokenprices_api = db.Column(db.Integer, index=True)
+
+    timestamp_blizzard_api = db.Column(db.DateTime,index = True)
+    timestamp_wowtokenprices_api = db.Column(db.DateTime,index = True)
+
+    last_change = db.Column(db.Integer, index=True)
+    one_day_low = db.Column(db.Integer, index=True)
+    one_day_high = db.Column(db.Integer, index=True)
+    seven_day_high = db.Column(db.Integer, index=True)
+    seven_day_low = db.Column(db.Integer, index=True)
+    month_low = db.Column(db.Integer, index=True)
+    month_high = db.Column(db.Integer, index=True)
+
+    def __repr__(self):
+        return "Current {}:{}; Change:{}".format(self.region,self.current_price_blizzard_api, self.last_change)

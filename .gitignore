@@ -1,8 +1,10 @@
 __pycache__/
 venv/
+venv_old/
 *.pyc
 .idea/
 migrations/
 help.txt
 *.txt
 test.py
+Support files/

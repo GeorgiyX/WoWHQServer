@@ -177,6 +177,30 @@
             {{auc.auc_form.submit()}}
         </p>
     </form>
-</div>
+    <div class="font" style="font-size:30px; font-weight: bold; margin-top:10px; margin-bottom:4px">WoWToken scaner:</div>
+    <div class="font"><b>Состояние: </b>
+        {%if wowtoken.reporter.isWork%}
+        <span style="color: green">"Запущен"</span></div>
+        <div class="font"><b>Количество циклов: </b>{{wowtoken.reporter.number_of_cycles}}<b> C момента начала скана прошло: </b>{{wowtoken.reporter.work_time}}</div>
+        {%else%}
+        <span style="color: navy">"Не активен"</span></div>
+        {%endif%}
+        <form action="" method="post" novalidate style="margin-top:8px;">
+        {{wowtoken.wowtoken_form.hidden_tag()}}
+        {{wowtoken.wowtoken_form.form_type()}}
 
+        <p>
+            <div style="display:inline-block">
+                <p>
+                    {{wowtoken.wowtoken_form.pause_time.label()}}
+                </p>
+                    {{wowtoken.wowtoken_form.pause_time(size = 5)}}
+            </div>
+                {% for error in wowtoken.wowtoken_form.errors%}
+                <span style="color: red;">{{ error }}</span>
+                {%endfor%}
+            {{wowtoken.wowtoken_form.submit()}}
+        </p>
+    </form>
+</div>
 {%endblock%}

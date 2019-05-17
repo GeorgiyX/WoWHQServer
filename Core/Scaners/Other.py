@@ -1,5 +1,7 @@
+import datetime as datetime
+
 from Core import db
-from Core.models import GameClass, GameSpec, Talants
+from Core.models import GameClass, GameSpec, Talants, WowToken, AssistInfo, User, Token
 from Core.Utilites import AccessToken, Utilites
 import copy
 
@@ -169,3 +171,39 @@ def SaveTalants():
                                 if int(spec.order) == int(data[langs[0]][str(cls.id)]["talents"][i][n][m]["spec"]["order"]):
                                     break
                             addTalant()
+
+def addWoWToken():
+    regions = ["us", "eu", "kr", "tw", "cn"]
+    exists_wowtoken = WowToken.query.all()
+    if len(exists_wowtoken) == 0:
+        for region in regions:
+            t = WowToken(region=region,
+                         current_price_blizzard_api=0,
+                         current_price_wowtokenprices_api =0,
+                         timestamp_blizzard_api = datetime.datetime.utcfromtimestamp(1101168000),
+                         timestamp_wowtokenprices_api = datetime.datetime.utcfromtimestamp(1101168000),
+                         last_change = 0,
+                         one_day_low =0,
+                         one_day_high =0,
+                         seven_day_high =0,
+                         seven_day_low =0,
+                         month_low =0,
+                         month_high =0)
+            db.session.add(t)
+            db.session.commit()
+
+
+def addUser(login, password):
+    u = User(login, password)
+    db.session.add(u)
+    db.session.commit()
+
+def addZeroLastItem():
+    ai = AssistInfo("LastItem", 0)
+    db.session.add(ai)
+    db.session.commit()
+
+def addClient(client_id, client_secret):
+    t = Token(token="nothiiing", expires=datetime.datetime.now(), client_id = client_id, client_secret = client_secret)
+    db.session.add(t)
+    db.commit()

@@ -1,10 +1,11 @@
 from copy import copy
 
-from Core.models import GameClass, Talants, GameSpec, Auctions, Servers, Items, Pets
+from Core.models import GameClass, Talants, GameSpec, Auctions, Servers, Items, Pets, WowToken
 
 
 class GetDict:
     langs = ["ru", "en", "de", "fr", "es"]
+    regions = ["us", "eu", "kr", "tw", "cn"]
 
     @staticmethod
     def getClasses(lang):
@@ -160,6 +161,14 @@ class GetDict:
                 return {"error": "no type"}
         else:
             return {"error": "no lang"}
+
+    @staticmethod
+    def getMinMaxCurrentWoWToken(region):
+        if region in GetDict.regions:
+            wt = WowToken.query.filter(WowToken.region == region).first()
+            return {"region": region, "date": str(wt.timestamp_blizzard_api), "current_price_blizzard_api":wt.current_price_blizzard_api, "last_change":wt.last_change, "one_day_low":wt.one_day_low, "one_day_high":wt.one_day_high}
+        else:
+            return {"error": "no region"}
 
 
 

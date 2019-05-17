@@ -2,7 +2,8 @@ from Core import app
 from flask import render_template, flash, redirect, request, jsonify
 
 from Core.Scaners.AuctionScaner import AuctionsScaner
-from Core.forms import PasswordForm, ClientForm, ServerForm, ItemForm, PetForm, AucForm
+from Core.Scaners.WoWTokenScaner import WoWTokenScaner
+from Core.forms import PasswordForm, ClientForm, ServerForm, ItemForm, PetForm, AucForm, WoWTokenForm
 from Core.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -54,6 +55,7 @@ def dashbord():
     item_form = ItemForm()
     pet_form = PetForm()
     auc_form = AucForm()
+    wowtoken_form = WoWTokenForm()
 
     if stopper.is_server_thread_must_stop is False:
         server_form.submit.label.text = "Выключить"
@@ -63,9 +65,10 @@ def dashbord():
         pet_form.submit.label.text = "Выключить"
     if stopper.is_auc_thread_must_stop is False:
         auc_form.submit.label.text = "Выключить"
+    if stopper.is_wowtoken_thread_must_stop is False:
+        wowtoken_form.submit.label.text = "Выключить"
 
     if request.method == "POST":
-        print("In post!")
         print("In post!")
         print(request.form["form_type"])
 
@@ -139,13 +142,26 @@ def dashbord():
                     flash("Запущен процесс остановки скана аукционов!")
                     return redirect("/dashbord")
 
+        elif request.form["form_type"] == "wowtoken_form":
+            if wowtoken_form.validate_on_submit():
+                if reporter.wowtokenscan["isWork"] == False:
+                    stopper.is_wowtoken_thread_must_stop = False
+                    wowtoken_thread = WoWTokenScaner(reporter = reporter, stopper = stopper, pause_time=wowtoken_form.pause_time.data)
+                    wowtoken_thread.start()
+                    flash("WoWToken сканируется..")
+                    return redirect("/dashbord")
+                else:
+                    stopper.is_wowtoken_thread_must_stop = True
+                    flash("Запущен процесс остановки скана WoWToken!")
+                    return redirect("/dashbord")
 
 
     return render_template("dashbord_page.html", title = "Dashbord", client = {"client_form":client_form, "token" : getToken(), "client":getClientValues()},
                             server = {"server_form":server_form, "reporter": reporter.serverscan},
                             items = {"item_form":item_form, "reporter": reporter.itemscan},
                             pet = {"pet_form":pet_form, "reporter":reporter.petscan},
-                            auc = {"auc_form": auc_form, "reporter": reporter.aucscan})
+                            auc = {"auc_form": auc_form, "reporter": reporter.aucscan},
+                            wowtoken = {"wowtoken_form": wowtoken_form, "reporter": reporter.wowtokenscan})
 
 
 @app.route("/api/", methods = ["GET"])
@@ -181,3 +197,7 @@ def getClasses(lang):
 @app.route("/api/specs/<string:lang>",  methods = ["GET"])
 def getSpecs(lang):
     return json.dumps(GetDict.getSpecs(lang=lang), ensure_ascii=False,indent=4)
+
+@app.route("/api/wowtoken/<string:region>",  methods = ["GET"])
+def getWoWToken(region):
+    return json.dumps(GetDict.getMinMaxCurrentWoWToken(region=region), ensure_ascii=False,indent=4)

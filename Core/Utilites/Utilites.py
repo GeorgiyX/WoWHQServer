@@ -55,6 +55,7 @@ class Reporter():
         self.aucscan = {"isWork": False, "current": 0, "total":0, "percent": 0, "star_time" : 0,
                         "number_of_cycles": 0, "auc_summ":0, "auc_time_summ":0, "auc_num": 0,
                         "cycle_time_summ":0,"avg_cycle_time":0,"avg_auc": 0, "avg_auc_time": 0}
+        self.wowtokenscan = {"isWork": False,"number_of_cycles": 0, "work_time":None}
 
 class ThreadStopper():
     def __init__(self):
@@ -62,6 +63,8 @@ class ThreadStopper():
         self.is_item_thread_must_stop = True
         self.is_pet_thread_must_stop = True
         self.is_auc_thread_must_stop = True
+        self.is_wowtoken_thread_must_stop = True
+
 
 
 class Log():

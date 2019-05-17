@@ -59,6 +59,11 @@ class AucForm(FlaskForm):
     cycle_time = IntegerField("Min время на 1 цикл (мин.):", default=40,widget=NumberInput(), validators=[DataRequired()])
     submit = SubmitField("Начать скан")
 
+class WoWTokenForm(FlaskForm):
+    form_type = HiddenField(default="wowtoken_form")
+    pause_time = IntegerField("Скан каждые, мин:", default=15,widget=NumberInput(), validators=[DataRequired()])
+    submit = SubmitField("Начать скан")
+
 
 
 
