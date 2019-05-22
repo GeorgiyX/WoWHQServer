@@ -87,7 +87,7 @@ class GetDict:
             else:
                 item = str(getattr(lot.item, "name_{}".format(lang)))
                 pet = None
-                key_pet = None
+                key_pet = "pet"
 
             data = {"item": item, "gameId": lot.item.gameId, key_pet:pet ,"icon":lot.item.icon ,"bid": lot.bid, "buyout": lot.buyout, "owner": lot.owner, "time:": lot.timeLeft}
             return data
