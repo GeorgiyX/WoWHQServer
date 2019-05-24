@@ -89,7 +89,7 @@ class GetDict:
                 pet = None
                 key_pet = "pet"
 
-            data = {"item": item, "gameId": lot.item.gameId, key_pet:pet ,"icon":lot.item.icon ,"bid": lot.bid, "buyout": lot.buyout, "owner": lot.owner, "time:": lot.timeLeft, "quantity" : lot.quantity, "slug": lot.slug}
+            data = {"item": item, "gameId": lot.item.gameId, key_pet:pet ,"icon":lot.item.icon ,"bid": lot.bid, "buyout": lot.buyout, "owner": lot.owner, "time:": lot.timeLeft, "quantity" : lot.quantity, "slug": slug}
             return data
 
         print(len(aucs))
