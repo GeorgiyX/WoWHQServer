@@ -7,6 +7,8 @@ import copy
 
 def SaveClasses():
     token = AccessToken.getToken()["access_token"]
+    icons = {"Warrior":"inv_sword_27", "Paladin":"inv_hammer_01", "Hunter": "inv_weapon_bow_07", "Rogue": "inv_throwingknife_04", "Priest":"inv_staff_30", "Death Knight":"spell_deathknight_classicon",
+              "Shaman":"inv_jewelry_talisman_04", "Mage":"inv_staff_13","Warlock":"spell_nature_faeriefire","Monk":"classicon_monk", "Druid":"inv_misc_monsterclaw_04", "Demon Hunter": "achievement_boss_illidan"}
     api = "https://eu.api.blizzard.com/wow/data/character/classes?locale={}&access_token={}"
     langs = ["ru_RU", "en_GB", "de_DE", "fr_FR", "es_ES"]
     exisist_cls = GameClass.query.all()
@@ -20,7 +22,9 @@ def SaveClasses():
                  name_de = data[langs[2]][i]["name"],
                  name_fr = data[langs[3]][i]["name"],
                  name_es = data[langs[4]][i]["name"],
-                 power_type = data[langs[1]][i]["powerType"])
+                 power_type = data[langs[1]][i]["powerType"],
+                 icon = icons[data[langs[1]][i]["name"]])
+
             print(game_cls)
             db.session.add(game_cls)
             db.session.commit()
@@ -136,6 +140,7 @@ def SaveTalants():
                                 range=game_range,
                                 powerCost=powerCost,
                                 cooldown=cooldown,
+                                icon = data[langs[1]][str(cls.id)]["talents"][i][n][m]["spell"]["icon"],
 
                                 name_ru=data[langs[0]][str(cls.id)]["talents"][i][n][m]["spell"]["name"],
                                 name_en=data[langs[1]][str(cls.id)]["talents"][i][n][m]["spell"]["name"],

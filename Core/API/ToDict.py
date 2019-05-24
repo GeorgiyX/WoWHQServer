@@ -13,7 +13,7 @@ class GetDict:
         if lang in GetDict.langs:
             clss = GameClass.query.all()
             for cls in clss:
-                data.append({"id": cls.id, "name" : getattr(cls, "name_{}".format(lang))})
+                data.append({"id": cls.id, "name" : getattr(cls, "name_{}".format(lang)), "icon":cls.icon})
             return data
         else:
             return {"error" : "no lang"}
@@ -52,7 +52,7 @@ class GetDict:
         talants = Talants.query.join(GameSpec, GameSpec.id == Talants.spec_id).join(GameClass, GameClass.id == GameSpec.class_id).filter(GameClass.id == int(cls),GameSpec.order == int(spec)).order_by(Talants.id.asc()).all()
         if lang in GetDict.langs:
             data["talents"] = [{"id" : t.id, "spec_id" : t.spec_id,"name": getattr(t,"name_{}".format(lang)), "description": getattr(t, "description_{}".format(lang)),
-                                "castTime":t.castTime, "range": t.range, "powerCost": t.powerCost, "cooldown":t.cooldown,
+                                "castTime":t.castTime, "range": t.range, "powerCost": t.powerCost, "cooldown":t.cooldown, "icon":t.icon,
                                 "row":t.tier, "col":t.column} for t in talants]
             return data
         else:
@@ -89,7 +89,7 @@ class GetDict:
                 pet = None
                 key_pet = "pet"
 
-            data = {"item": item, "gameId": lot.item.gameId, key_pet:pet ,"icon":lot.item.icon ,"bid": lot.bid, "buyout": lot.buyout, "owner": lot.owner, "time:": lot.timeLeft}
+            data = {"item": item, "gameId": lot.item.gameId, key_pet:pet ,"icon":lot.item.icon ,"bid": lot.bid, "buyout": lot.buyout, "owner": lot.owner, "time:": lot.timeLeft, "quantity" : lot.quantity, "slug": lot.slug}
             return data
 
         print(len(aucs))

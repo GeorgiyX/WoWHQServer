@@ -518,6 +518,8 @@ class GameClass(db.Model):
     name_es = db.Column(db.String(128), index = True, unique = False)
 
     power_type = db.Column(db.String(128), index = True, unique = False)
+    icon = db.Column(db.String(64), index = False, unique = False)
+
 
     def __init__(self,
                  name_ru,
@@ -525,7 +527,8 @@ class GameClass(db.Model):
                  name_de,
                  name_fr,
                  name_es,
-                 power_type):
+                 power_type,
+                 icon):
         self.name_ru = name_ru
         self.name_en = name_en
         self.name_de = name_de
@@ -533,6 +536,7 @@ class GameClass(db.Model):
         self.name_es = name_es
 
         self.power_type = power_type
+        self.icon = icon
 
     def __repr__(self):
 
@@ -614,6 +618,7 @@ class Talants(db.Model):
     range = db.Column(db.String(64), index=True, unique=False)
     powerCost = db.Column(db.String(64), index=True, unique=False)
     cooldown = db.Column(db.String(64), index=True, unique=False)
+    icon = db.Column(db.String(64), index=True, unique=False)
 
     name_ru = db.Column(db.String(128), index=True, unique=False)
     name_en = db.Column(db.String(128), index=True, unique=False)
